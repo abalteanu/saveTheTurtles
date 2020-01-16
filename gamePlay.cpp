@@ -35,12 +35,12 @@ void playGame(int &points, int &stage)
 
         //making hook image
         struct Character hook;
-        loadCharacter(hook, "hook.png", 270, 170);
+        loadCharacter(hook, "hook.png", 270, 200);
         al_draw_bitmap(hook.bitmap, hook.x, hook.y, 0); //Draw hook
         al_flip_display();
 
         ///gameplay loop
-        bool exitgame = false;
+       // bool exitgame = false;
         al_start_timer(timer);
 
         //for game timer
@@ -48,6 +48,8 @@ void playGame(int &points, int &stage)
         printf("\n START TIME %f\n",startTime); //starts counting when compiled
         double endTime = 0;
         double currentTime;
+
+        int hookMode = 1; //1 - moving down, 0 - moving up
 
         while (stage == 1)
         { // Keep going until we hit Close DISPLAY (X button).
@@ -80,7 +82,7 @@ void playGame(int &points, int &stage)
                     moveGarbage(ev, cup2[i]);
                 }
 
-                moveCharacter(ev, hook);
+                moveCharacter(ev, hook, hookMode);
 
 
                 for (int j=0; j<5; j++){
@@ -91,7 +93,7 @@ void playGame(int &points, int &stage)
                         {
                             //make a reel hook in funciotn reelHook
                             points+=30;
-                            for(int i=hook.y; i>50; i--)
+                            for(int i=hook.y; i>200; i--)
                             {
                                 //reels the garbage and cup upwards
                                 hook.y-=1;
@@ -112,7 +114,7 @@ void playGame(int &points, int &stage)
                         {
                             //make a reel hook in funciotn reelHook
                             points+=10;
-                            for(int i=hook.y; i>50; i--)
+                            for(int i=hook.y; i>200; i--)
                             {
                                 //reels the garbage and cup upwards
                                 hook.y-=1;
@@ -137,38 +139,86 @@ void playGame(int &points, int &stage)
 
 }
 
-
-
-void moveCharacter(ALLEGRO_EVENT event, Character &hook)
+void moveCharacter(ALLEGRO_EVENT event, Character &hook, int &mode)
 {
     calcBoundsCharacter(hook);
+    //int mode = 1 ;// mode 0 means I throw to catch, mode 1 means i caught TODO: Figue out how to pass the Mode!
 
     if (event.type == ALLEGRO_EVENT_KEY_DOWN)
     {
-        if (event.keyboard.keycode == ALLEGRO_KEY_DOWN)
+        if (event.keyboard.keycode == ALLEGRO_KEY_DOWN && mode == 1)
         {
             hook.moveD = 3;
+            printf ("Key down\n");
         }
     }
     else if (event.type == ALLEGRO_EVENT_KEY_UP)
     {
-            //if (event.keyboard.keycode == ALLEGRO_KEY_DOWN)
-            //{
+            if (event.keyboard.keycode == ALLEGRO_KEY_DOWN)
+            {
                     hook.moveD = -4;
-            //}
+                    mode = 0;
+                    printf ("Key UP, Mode 0\n");
+            }
     }
     if (event.type == ALLEGRO_EVENT_TIMER)
     {
         // applying movement to hook
-        if (hook.y >= 100)
+        if (hook.y >= 200)
+        {
+            hook.y += hook.moveD;
+            //printf("Hook is moving by ... >>> %d\n", hook.moveD);
+        }
+
+        else //if(hook.y < 200)
+        {
+            //this fixes my out of bounds problem... but how do i make it look smoother
+            hook.y = 200;
+            mode = 1;
+            //printf("Hook reached the top\n");
+        }
+
+        //printf("%d\n",hook.moveD);
+    }
+
+}
+
+void moveCharacter(ALLEGRO_EVENT event, Character &hook)
+{
+    calcBoundsCharacter(hook);
+    int mode = 1 ;// mode 0 means I throw to catch, mode 1 means i caught TODO: Figue out how to pass the Mode!
+
+    if (event.type == ALLEGRO_EVENT_KEY_DOWN)
+    {
+        if (event.keyboard.keycode == ALLEGRO_KEY_DOWN && mode == 1)
+        {
+            hook.moveD = 3;
+            printf ("Key down\n");
+        }
+    }
+    else if (event.type == ALLEGRO_EVENT_KEY_UP)
+    {
+            if (event.keyboard.keycode == ALLEGRO_KEY_DOWN)
+            {
+                    hook.moveD = -4;
+                    mode = 0;
+                    printf ("Key UP, Mode 0\n");
+            }
+    }
+    if (event.type == ALLEGRO_EVENT_TIMER)
+    {
+        // applying movement to hook
+        if (hook.y > 200)
         {
             hook.y += hook.moveD;
         }
 
-        else if (hook.y <= 100)
+        else if (hook.y <= 200)
         {
             //this fixes my out of bounds problem... but how do i make it look smoother
-            hook.y = 101;
+            hook.y = 201;
+            mode = 1;
+            printf("Hook reached the top\n");
         }
 
         //printf("%d\n",hook.moveD);
@@ -188,7 +238,7 @@ void checkTime(ALLEGRO_EVENT event, double time, int &stage)
 {
         printTime(event, time);
 
-        if (time > 10) //breaks out of loop when 10s has been reached
+        if (time > 30) //breaks out of loop when 30s has been reached
         {
             gameOver();
             displayBackButton(stage);

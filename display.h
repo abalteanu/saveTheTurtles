@@ -82,6 +82,7 @@ bool isCollision(Character &a, Image &b);
 //gameplay.cpp
 void playGame(int &points, int &stage);
 void moveCharacter(ALLEGRO_EVENT event, Character &hook);
+void moveCharacter(ALLEGRO_EVENT event, Character &hook, int &mode);
 void printTime(ALLEGRO_EVENT event, double time);
 void checkTime(ALLEGRO_EVENT event, double time, int &stage);
 void gameOver();

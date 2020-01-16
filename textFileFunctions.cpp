@@ -107,7 +107,7 @@ int updateHighScores(int points, int highScores[])
     //print score into text file for loop
     for (int i = 0; i < 5; i++)// or while file not end of file
     {
-        fprintf(filePointer, "%d", highScores[i]);
+        fprintf(filePointer, "%d\n", highScores[i]);
     }
 
 
