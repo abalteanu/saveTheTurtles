@@ -45,7 +45,6 @@ void playGame(int &points, int &stage)
 
         //for game timer
         double startTime = al_get_time();
-        printf("\n START TIME %f\n",startTime); //starts counting when compiled
         double endTime = 0;
         double currentTime;
 
@@ -58,7 +57,6 @@ void playGame(int &points, int &stage)
 
             al_wait_for_event(event_queue, &ev);    //waiting for event in the queue
 
-
             if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
             {
                 stage = 0;
@@ -66,7 +64,6 @@ void playGame(int &points, int &stage)
             else //ev.type == ALLEGRO_EVENT_TIMER)
             {
                 endTime = al_get_time();    //detecting time at time of play
-                //printf("\n%f\n",endTime);
 
                 currentTime = endTime - startTime;
                 checkTime(ev, currentTime, stage);  //prints time to screen and ends game if over 60 seconds
@@ -86,7 +83,7 @@ void playGame(int &points, int &stage)
 
 
                 for (int j=0; j<5; j++){
-                    //reloadImages(hook, cup1, boat, points);
+                    //for cup1, processing if the cup was caught
                     if (cup1[j].print == 1)     //if the cup is being printed (is not in garbage
                     {
                         if (isCollision(hook, cup1[j]) == true)
@@ -99,7 +96,7 @@ void playGame(int &points, int &stage)
                                 hook.y-=1;
                                 cup1[j].y-=1;
                                 al_rest(0.001);     //so user can see the hook being reeled up
-                                reloadImages(hook, cup1, boat, points, background, cup2);
+                                reloadScreen(hook, cup1, boat, points, background, cup2, currentTime);
 
                             }
                             moveToTrash(cup1[j]);   //moves the garbage collected to inventory once it is collected
@@ -108,6 +105,7 @@ void playGame(int &points, int &stage)
                     }
 
                     //processing images of cup2
+                    //this is repeating code, but there are so many parameters in the reloadScreen function that making a separate function would be pointless
                     if (cup2[j].print == 1)     //if the cup is being printed (is not in garbage
                     {
                         if (isCollision(hook, cup2[j]) == true)
@@ -120,20 +118,20 @@ void playGame(int &points, int &stage)
                                 hook.y-=1;
                                 cup2[j].y-=1;
                                 al_rest(0.001);     //so user can see the hook being reeled up
-                                reloadImages(hook, cup1, boat, points, background, cup2);
+                                reloadScreen(hook, cup1, boat, points, background, cup2, currentTime);
                             }
                             moveToTrash(cup2[j]);   //moves the garbage collected to inventory once it is collected
                             cup2[j].print = 0;      //stop printing the cup
                         }
                     }
-                    //reloadImages(hook, cup1, boat, points);
+                    //reloadScreen(hook, cup1, boat, points);
                 }
 
             }
 
 
             //redraw all the images
-            reloadImages(hook, cup1, boat, points, background, cup2);
+            reloadScreen(hook, cup1, boat, points, background, cup2, currentTime);
         }
 
 
@@ -225,18 +223,18 @@ void moveCharacter(ALLEGRO_EVENT event, Character &hook)
     }
 }
 
-void printTime(ALLEGRO_EVENT event, double time)
+void printTime(double time)
 {
     //if (event.type == ALLEGRO_EVENT_TIMER)
 
-        al_draw_textf(font, STEELBLUE, 0, 30, ALLEGRO_ALIGN_LEFT, "%0.2f", time);
+        al_draw_textf(font, STEELBLUE, 0, 60, ALLEGRO_ALIGN_LEFT, "%0.2f", time);
         al_flip_display();
 
 }
 
 void checkTime(ALLEGRO_EVENT event, double time, int &stage)
 {
-        printTime(event, time);
+        printTime(time);
 
         if (time > 30) //breaks out of loop when 30s has been reached
         {

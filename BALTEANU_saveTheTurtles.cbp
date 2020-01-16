@@ -36,7 +36,6 @@
 		<Unit filename="display.cpp" />
 		<Unit filename="display.h" />
 		<Unit filename="gamePlay.cpp" />
-		<Unit filename="highscoreFunctions.cpp" />
 		<Unit filename="main.cpp" />
 		<Unit filename="menuFunctions.cpp" />
 		<Unit filename="textFileFunctions.cpp" />

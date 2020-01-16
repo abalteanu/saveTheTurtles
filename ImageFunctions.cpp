@@ -72,7 +72,7 @@ void setCharacterPosition(Character &myHook, int xPos, int yPos)
     myHook.y = yPos;
 }
 
-void reloadImages(Character person, Image cup1[], Image &boat, int score, ALLEGRO_BITMAP * background, Image cup2[])
+void reloadScreen(Character person, Image cup1[], Image &boat, int score, ALLEGRO_BITMAP * background, Image cup2[], double time)
 {
     int w = SCREEN_W;
     int h = SCREEN_H;
@@ -84,7 +84,8 @@ void reloadImages(Character person, Image cup1[], Image &boat, int score, ALLEGR
 
     al_draw_scaled_bitmap(background, 0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background), 0, 0, w, h, 0);
     //al_draw_bitmap(background, 0, 0, 0);    //drawing background
-    al_draw_textf(font, STEELBLUE, 0, 0, ALLEGRO_ALIGN_LEFT, "Score: %d", score);   //drawing score
+    al_draw_textf(font, STEELBLUE, 0, 0, ALLEGRO_ALIGN_LEFT, "Wait for hook to reach boat before fishing again.");   //drawing score
+    al_draw_textf(font, STEELBLUE, 0, 30, ALLEGRO_ALIGN_LEFT, "Score: %d", score);   //drawing score
     al_draw_bitmap(person.bitmap, person.x, person.y, 0); //Draw hook
 
     //reprinting cup1
@@ -111,6 +112,7 @@ void reloadImages(Character person, Image cup1[], Image &boat, int score, ALLEGR
     {
         al_draw_bitmap(boat.bitmap, boat.x, boat.y, 0);
     }
+    printTime(time);
 
     al_flip_display();
 }

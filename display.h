@@ -45,7 +45,7 @@ struct Image
     float time;                             // resting time
     int direction = 0;
     int speed = 1;
-    bool print = 1;                         // if print is 0, the reloadImages function draws over the image
+    bool print = 1;                         // if print is 0, the reloadScreen function draws over the image
 };
 
 struct Button
@@ -72,7 +72,7 @@ void setPosition(Image &myImg, int xPos, int yPos, int zoomX, int zoomY);
 void printSprite(Image &myImg, const char *filename, int xPos, int yPos, int zoomX, int zoomY);
 int loadCharacter(Character &myHook, const char *filename, int xPos, int yPos);
 void setCharacterPosition(Character &myHook, int xPos, int yPos);
-void reloadImages(Character person, Image cup1[], Image &boat, int score, ALLEGRO_BITMAP *background, Image cup2[]);
+void reloadScreen(Character person, Image cup1[], Image &boat, int score, ALLEGRO_BITMAP * background, Image cup2[], double time);
 void moveGarbage(ALLEGRO_EVENT event, Image &garbage);
 void calcBoundsCharacter(Character &myHook);
 void calcBounds(Image &myImg);
@@ -83,7 +83,7 @@ bool isCollision(Character &a, Image &b);
 void playGame(int &points, int &stage);
 void moveCharacter(ALLEGRO_EVENT event, Character &hook);
 void moveCharacter(ALLEGRO_EVENT event, Character &hook, int &mode);
-void printTime(ALLEGRO_EVENT event, double time);
+void printTime(double time);
 void checkTime(ALLEGRO_EVENT event, double time, int &stage);
 void gameOver();
 
@@ -96,9 +96,6 @@ void calcBoundsButton(Button &myImg);
 int makeButton(Button &myButton, const char *filename, int xPos, int yPos, const char *text);
 bool pressButton(const Button &a, int mouseX, int mouseY);
 void displayBackButton(int &stage);
-
-
-//highscoreFunctions.cpp
 
 //textFileFunctions.cpp
 int loadRules(char text[][200]);
