@@ -1,0 +1,8 @@
+RULES
+Welcome to SAVE THE TURTLES!
+Your job is to, quite simply, save the turtles by collecting the
+garbage from the sea!
+Press the down arrow key to fish into the ocean.
+Try and catch all the garbage before the time runs out!
+Garbage deeper in the ocean is worth more points!
+GOOD LUCK!

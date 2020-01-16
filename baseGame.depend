@@ -1,0 +1,43 @@
+# depslib dependency file v1.0
+1578885158 source:c:\users\valen\documents\computer science 11\basegame\display.cpp
+	"display.h"
+
+1579140143 c:\users\valen\documents\computer science 11\basegame\display.h
+	<iostream>
+	<allegro5/allegro.h>
+	<allegro5/allegro_font.h>
+	<allegro5/allegro_ttf.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+	<allegro5/allegro_native_dialog.h>
+
+1579139876 source:c:\users\valen\documents\computer science 11\basegame\main.cpp
+	"display.h"
+
+1578265931 c:\users\valen\documents\computer science 11\basegame\main.h
+	<iostream>
+	<allegro5/allegro.h>
+	<allegro5/allegro_font.h>
+	<allegro5/allegro_ttf.h>
+	<allegro5/allegro_image.h>
+	<allegro5/allegro_primitives.h>
+	<allegro5/allegro_native_dialog.h>
+
+1579139266 source:c:\users\valen\documents\computer science 11\basegame\gameplay.cpp
+	"display.h"
+
+1579134769 source:c:\users\valen\documents\computer science 11\basegame\imagefunctions.cpp
+	"display.h"
+
+1579141796 source:c:\users\valen\documents\computer science 11\basegame\menufunctions.cpp
+	"display.h"
+
+1579142038 source:c:\users\valen\documents\computer science 11\basegame\buttonfunctions.cpp
+	"display.h"
+
+1579139633 source:c:\users\valen\documents\computer science 11\basegame\highscorefunctions.cpp
+	"display.h"
+
+1579144038 source:c:\users\valen\documents\computer science 11\basegame\textfilefunctions.cpp
+	"display.h"
+
