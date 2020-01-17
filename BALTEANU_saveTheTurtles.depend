@@ -1,8 +1,8 @@
 # depslib dependency file v1.0
-1579142038 source:c:\users\valen\documents\github\savetheturtles\buttonfunctions.cpp
+1579238181 source:c:\users\valen\documents\github\savetheturtles\buttonfunctions.cpp
 	"display.h"
 
-1579149450 c:\users\valen\documents\github\savetheturtles\display.h
+1579234864 c:\users\valen\documents\github\savetheturtles\display.h
 	<iostream>
 	<allegro5/allegro.h>
 	<allegro5/allegro_font.h>
@@ -11,25 +11,25 @@
 	<allegro5/allegro_primitives.h>
 	<allegro5/allegro_native_dialog.h>
 
-1578885158 source:c:\users\valen\documents\github\savetheturtles\display.cpp
+1579234651 source:c:\users\valen\documents\github\savetheturtles\display.cpp
 	"display.h"
 
-1579150950 source:c:\users\valen\documents\github\savetheturtles\gameplay.cpp
+1579237706 source:c:\users\valen\documents\github\savetheturtles\gameplay.cpp
 	"display.h"
 
 1579139633 source:c:\users\valen\documents\github\savetheturtles\highscorefunctions.cpp
 	"display.h"
 
-1579134769 source:c:\users\valen\documents\github\savetheturtles\imagefunctions.cpp
+1579235735 source:c:\users\valen\documents\github\savetheturtles\imagefunctions.cpp
 	"display.h"
 
-1579139876 source:c:\users\valen\documents\github\savetheturtles\main.cpp
+1579238557 source:c:\users\valen\documents\github\savetheturtles\main.cpp
 	"display.h"
 
-1579141796 source:c:\users\valen\documents\github\savetheturtles\menufunctions.cpp
+1579237875 source:c:\users\valen\documents\github\savetheturtles\menufunctions.cpp
 	"display.h"
 
-1579146668 source:c:\users\valen\documents\github\savetheturtles\textfilefunctions.cpp
+1579238437 source:c:\users\valen\documents\github\savetheturtles\textfilefunctions.cpp
 	"display.h"
 
 1579184201 source:\\ad.ocdsb.ca\studenthome\7\s332882307\github\savetheturtles\buttonfunctions.cpp

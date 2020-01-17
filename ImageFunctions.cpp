@@ -9,7 +9,7 @@ extern ALLEGRO_BITMAP* menuBackground;
 
 int loadSprite(Image &myImg, const char *filename)
 {
-    // This image loads the file and makes sure it works
+    ///This function loads the image file to struct location and makes sure it works
     myImg.bitmap = al_load_bitmap(filename);
     if (myImg.bitmap == nullptr)
     {
@@ -23,7 +23,7 @@ int loadSprite(Image &myImg, const char *filename)
 
 void setPosition(Image &myImg, int xPos, int yPos, int zoomX, int zoomY)
 {
-    // This function sets the position of the image on the screen
+    ///This function sets the position of the image on the screen
     myImg.x = xPos;
     myImg.y = yPos;
     myImg.zoomX = zoomX;
@@ -32,7 +32,7 @@ void setPosition(Image &myImg, int xPos, int yPos, int zoomX, int zoomY)
 
 void printSprite(Image &myImg, const char *filename, int xPos, int yPos, int zoomX, int zoomY)
 {
-    // This function just draws the image to the screen (so that this does not have to be done in main)
+    ///This function just draws the image to the screen (so that this does not have to be done in main) and flips the display
     loadSprite(myImg, filename);
     setPosition(myImg, xPos, yPos, zoomX, zoomY);
     //al_draw_bitmap(myImg.bitmap, xPos, yPos, 0);
@@ -50,7 +50,7 @@ void printSprite(Image &myImg, const char *filename, int xPos, int yPos, int zoo
 
 int loadCharacter(Character &myHook, const char *filename, int xPos, int yPos)
 {
-    //Similar to load sprite, but also sets position and is specific to the moving character (the struct is different)
+    ///This function is similar to load sprite, but it also sets position and is specific to the moving character (the struct is different)
     myHook.bitmap = al_load_bitmap(filename);
     if (myHook.bitmap == nullptr)
     {
@@ -67,24 +67,19 @@ int loadCharacter(Character &myHook, const char *filename, int xPos, int yPos)
 
 void setCharacterPosition(Character &myHook, int xPos, int yPos)
 {
-    // This function sets the position of the image on the screen
+    ///This function sets the position of the image on the screen (for character struct only)
     myHook.x = xPos;
     myHook.y = yPos;
 }
 
 void reloadScreen(Character person, Image cup1[], Image &boat, int score, ALLEGRO_BITMAP * background, Image cup2[], double time)
 {
+    ///This function reloads existing images and updates screen
     int w = SCREEN_W;
     int h = SCREEN_H;
-    //reloads existing images and updates screen
-
-    //makeBackground(background);
-    //al_clear_to_color(SKYBLUE);
-    //background = al_load_bitmap(BACKGROUND_FILE);
 
     al_draw_scaled_bitmap(background, 0, 0, al_get_bitmap_width(background), al_get_bitmap_height(background), 0, 0, w, h, 0);
-    //al_draw_bitmap(background, 0, 0, 0);    //drawing background
-    al_draw_textf(font, STEELBLUE, 0, 0, ALLEGRO_ALIGN_LEFT, "Wait for hook to reach boat before fishing again.");   //drawing score
+    al_draw_textf(font, STEELBLUE, 0, 0, ALLEGRO_ALIGN_LEFT, "Press down arrowkey to begin fishing!");   //drawing score
     al_draw_textf(font, STEELBLUE, 0, 30, ALLEGRO_ALIGN_LEFT, "Score: %d", score);   //drawing score
     al_draw_bitmap(person.bitmap, person.x, person.y, 0); //Draw hook
 
@@ -119,22 +114,19 @@ void reloadScreen(Character person, Image cup1[], Image &boat, int score, ALLEGR
 
 void moveGarbage(ALLEGRO_EVENT event, Image &garbage)
 {
+    ///This function moves the garbage sprite array
     int screenW = SCREEN_W;
     int imageW = al_get_bitmap_width(garbage.bitmap);
 
     if (event.type == ALLEGRO_EVENT_TIMER)
     {
-            if (garbage.x < 0)
-        {
+        if (garbage.x < 0)  //changes direction of movement depending on which side of the screen the cups are
             garbage.direction = 0;
-        }
 
         if (garbage.x > screenW - imageW)
-        {
             garbage.direction = 1;
-        }
 
-        switch(garbage.direction)
+        switch(garbage.direction)   //applies movement
         {
         case 0:
             garbage.x+= garbage.speed;
@@ -144,17 +136,11 @@ void moveGarbage(ALLEGRO_EVENT event, Image &garbage)
             break;
         }
     }
-
 }
 
 void calcBoundsCharacter(Character &myHook)
 {
-    /*
-    printf("bbBootom of character = %d\n",myHook.bbBottom);
-    printf("bbRight of character = %d\n",myHook.bbRight);
-    printf("bbTop of character = %d\n",myHook.bbTop);
-    printf("bbleft of character = %d\n",myHook.bbLeft);
-    */
+    ///This function calculates the bounds for the character image
     myHook.bbLeft = myHook.x;
 	myHook.bbTop = myHook.y;
 	myHook.bbRight = myHook.bbLeft + al_get_bitmap_width(myHook.bitmap);
@@ -163,6 +149,7 @@ void calcBoundsCharacter(Character &myHook)
 }
 void calcBounds(Image &myImg)
 {
+    ///This function calculates the bounds for an image
     myImg.bbLeft = myImg.x;
 	myImg.bbTop = myImg.y;
 	myImg.bbRight = myImg.bbLeft + al_get_bitmap_width(myImg.bitmap);
@@ -171,16 +158,15 @@ void calcBounds(Image &myImg)
 
 void moveToTrash(Image &myImg)
 {
+    ///This function does the animation for pulling the cup upwards with the hook
     int ImgW = al_get_bitmap_width(myImg.bitmap);
     int screenW = SCREEN_W;
     myImg.y = 0;
     myImg.x = screenW - ImgW;
 }
 
-
 bool isCollision(Character &a, Image &b) {
-    //calcBounds(a);
-    //calcBounds(b);
+    ///This function checks if the bounding box of two images have collided (collision detection)
     if (a.bbBottom < b.bbTop)
     {
         return false;

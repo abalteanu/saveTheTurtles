@@ -1,8 +1,12 @@
+The ultimate test of man's conscience may be his 
+willingness to sacrifice something today for future
+generations whose words of thanks will not be heard.
+-Gaylord Nelson
 RULES
 Welcome to SAVE THE TURTLES!
 Your job is to, quite simply, save the turtles by collecting the
 garbage from the sea!
-Press the down arrow key to fish into the ocean.
-Try and catch all the garbage before the time runs out!
+Aim, then press the down arrow key to fish into the ocean.
+Catch the most garbage possible in 30 seconds!
 Garbage deeper in the ocean is worth more points!
 GOOD LUCK!

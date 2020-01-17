@@ -1,6 +1,17 @@
-/// This program will be the base game for the SAVE THE TURTLES summative game  ///
-/// Ana Balteanu
-
+/*****************************************************************************
+ *	Name:     Ana Balteanu                                                   *
+ *	Date:     January 2020                                                   *
+ *                                                                           *
+ *	Purpose: ICS3U SUMMATIVE ASSIGNMENT                                      *
+ *	         Save The Turtles                                                *
+ *	                                                                         *
+ *	to Note: hook can go out of bounds... but this can be part of user strats*
+ *	                                                                         *
+ *	Known Issues:                                                            *
+ *          hook glitches when it reaches boat and waits for user's commands *
+ *	        boundry boxes are a bit off                                      *
+ *                                                                           *
+ *****************************************************************************/
 #include "display.h"    // Include the header file.
 
 
@@ -50,7 +61,6 @@ int main(int argc, char *argv[])
 
         case 1:
             //game case
-            printf("case 1 begin\n");
             points = 0;
             playGame(points, stage);
             //AFter game is over, user closed or timer done, update High Scores:
@@ -66,13 +76,8 @@ int main(int argc, char *argv[])
             allegroShutDown(display, event_queue, background);
             exitGame = true;    //exists game loop
             break;
-        }// switch bracket
+        }
     }
-
-
-	/**     Ending Program      **/
-
-
 
     // Exit with no errors
 	return 0;

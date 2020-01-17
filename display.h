@@ -33,7 +33,6 @@ struct Character
     int bbRight, bbLeft, bbTop, bbBottom; // boundary box
     int x, y;
     const char *filename;
-    ALLEGRO_BITMAP *frame [3];
 };
 
 struct Image
@@ -46,6 +45,7 @@ struct Image
     int direction = 0;
     int speed = 1;
     bool print = 1;                         // if print is 0, the reloadScreen function draws over the image
+    ALLEGRO_BITMAP *frame [3];
 };
 
 struct Button

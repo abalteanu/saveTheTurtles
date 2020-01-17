@@ -10,144 +10,140 @@ extern ALLEGRO_BITMAP* menuBackground;
 
 void playGame(int &points, int &stage)
 {
-    //game
-        makeBackgrounds(background, backgroundFile);
+    ///This function is the official game play function, all the steps for each part of the actual game occur here.
 
-        Image boat;
-        printSprite(boat, "boat4.png", 300, 50, 0, 0);
+    makeBackgrounds(background, backgroundFile);
 
-        Image cup1[5];
-        for (int i=0; i<5; i++)
+    Image boat;
+    printSprite(boat, "boat4.png", 300, 50, 0, 0);
+
+    Image cup1[5];
+    for (int i=0; i<5; i++)
+    {
+        //prints an array of garbage
+        printSprite(cup1[i], "mcDonalds.png", i*100, 800, 0, 0);
+        calcBounds(cup1[i]);
+    }
+
+    Image cup2[5];
+    for (int i=0; i<5; i++)
+    {
+        //prints an array of garbage
+        printSprite(cup2[i], "mcDonalds.png", i*100, 500, 0, 0);
+        cup2[i].speed = 2;
+        calcBounds(cup2[i]);
+    }
+
+    //making hook image
+    struct Character hook;
+    loadCharacter(hook, "hook.png", 270, 200);
+    al_draw_bitmap(hook.bitmap, hook.x, hook.y, 0); //Draw hook
+    al_flip_display();
+
+
+    al_start_timer(timer);  //starting timer
+
+    //for game timer
+    double startTime = al_get_time();
+    double endTime = 0;
+    double currentTime;
+
+    int hookMode = 1; //1 - moving down, 0 - moving up
+
+    ///gameplay loop
+    while (stage == 1)
+    {
+
+        ALLEGRO_EVENT ev;
+
+        al_wait_for_event(event_queue, &ev);    //waiting for event in the queue
+
+        if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)// Keep going until we hit Close DISPLAY (X button).
         {
-            //prints an array of garbage
-            printSprite(cup1[i], "mcDonalds.png", i*100, 800, 0, 0);
-            calcBounds(cup1[i]);
+            stage = 0;
         }
-
-        Image cup2[5];
-        for (int i=0; i<5; i++)
+        else
         {
-            //prints an array of garbage
-            printSprite(cup2[i], "mcDonalds.png", i*100, 500, 0, 0);
-            cup2[i].speed = 2;
-            calcBounds(cup2[i]);
-        }
+            endTime = al_get_time();    //detecting time at time of play
 
-        //making hook image
-        struct Character hook;
-        loadCharacter(hook, "hook.png", 270, 200);
-        al_draw_bitmap(hook.bitmap, hook.x, hook.y, 0); //Draw hook
-        al_flip_display();
+            currentTime = 30-(endTime - startTime);     //countdown from 30 seconds
+            checkTime(ev, currentTime, stage);  //prints time to screen and ends game has reached 0 seconds
 
-        ///gameplay loop
-       // bool exitgame = false;
-        al_start_timer(timer);
+            if (stage == 0)
+                break;
 
-        //for game timer
-        double startTime = al_get_time();
-        double endTime = 0;
-        double currentTime;
-
-        int hookMode = 1; //1 - moving down, 0 - moving up
-
-        while (stage == 1)
-        { // Keep going until we hit Close DISPLAY (X button).
-
-            ALLEGRO_EVENT ev;
-
-            al_wait_for_event(event_queue, &ev);    //waiting for event in the queue
-
-            if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+            for (int i=0; i<5; i++) //moving garbage arrays
             {
-                stage = 0;
+                moveGarbage(ev, cup1[i]);
+                moveGarbage(ev, cup2[i]);
             }
-            else //ev.type == ALLEGRO_EVENT_TIMER)
+
+            moveCharacter(ev, hook, hookMode);  //moves hook
+
+
+            for (int j=0; j<5; j++)
             {
-                endTime = al_get_time();    //detecting time at time of play
-
-                currentTime = endTime - startTime;
-                checkTime(ev, currentTime, stage);  //prints time to screen and ends game if over 60 seconds
-
-                if (stage == 0)
-                    break;
-
-                //printTime(ev, currentTime, stage);
-
-                for (int i=0; i<5; i++)
+                //for cup1, processing if the cup was caught
+                if (cup1[j].print == 1)     //if the cup is being printed (is not in garbage)
                 {
-                    moveGarbage(ev, cup1[i]);
-                    moveGarbage(ev, cup2[i]);
+                    if (isCollision(hook, cup1[j]) == true)//check for collision
+                    {
+                        //reeling in the garbaage
+                        points+=30; //adding points to total
+                        for(int i=hook.y; i>200; i--)
+                        {
+                            //reels the garbage and cup upwards
+                            hook.y-=1;
+                            cup1[j].y-=1;
+                            al_rest(0.001);     //so user can see the hook being reeled up
+                            reloadScreen(hook, cup1, boat, points, background, cup2, currentTime);
+
+                        }
+                        moveToTrash(cup1[j]);   //moves the garbage collected to inventory once it is collected
+                        cup1[j].print = 0;      //stop printing the cup
+                    }
                 }
 
-                moveCharacter(ev, hook, hookMode);
-
-
-                for (int j=0; j<5; j++){
-                    //for cup1, processing if the cup was caught
-                    if (cup1[j].print == 1)     //if the cup is being printed (is not in garbage
+                //processing images of cup2
+                //this is repeating code, but there are so many parameters in the reloadScreen function that making a separate function would be pointless
+                if (cup2[j].print == 1)     //if the cup is being printed (is not in garbage)
+                {
+                    if (isCollision(hook, cup2[j]) == true)
                     {
-                        if (isCollision(hook, cup1[j]) == true)
+                        //make a reel hook in funciotn reelHook
+                        points+=10;     //only ten points for cups nearer to the surface
+                        for(int i=hook.y; i>200; i--)
                         {
-                            //make a reel hook in funciotn reelHook
-                            points+=30;
-                            for(int i=hook.y; i>200; i--)
-                            {
-                                //reels the garbage and cup upwards
-                                hook.y-=1;
-                                cup1[j].y-=1;
-                                al_rest(0.001);     //so user can see the hook being reeled up
-                                reloadScreen(hook, cup1, boat, points, background, cup2, currentTime);
-
-                            }
-                            moveToTrash(cup1[j]);   //moves the garbage collected to inventory once it is collected
-                            cup1[j].print = 0;      //stop printing the cup
+                            //reels the garbage and cup upwards
+                            hook.y-=1;
+                            cup2[j].y-=1;
+                            al_rest(0.001);     //so user can see the hook being reeled up
+                            reloadScreen(hook, cup1, boat, points, background, cup2, currentTime);
                         }
+                        moveToTrash(cup2[j]);   //moves the garbage collected to inventory once it is collected
+                        cup2[j].print = 0;      //stop printing the cup
                     }
-
-                    //processing images of cup2
-                    //this is repeating code, but there are so many parameters in the reloadScreen function that making a separate function would be pointless
-                    if (cup2[j].print == 1)     //if the cup is being printed (is not in garbage
-                    {
-                        if (isCollision(hook, cup2[j]) == true)
-                        {
-                            //make a reel hook in funciotn reelHook
-                            points+=10;
-                            for(int i=hook.y; i>200; i--)
-                            {
-                                //reels the garbage and cup upwards
-                                hook.y-=1;
-                                cup2[j].y-=1;
-                                al_rest(0.001);     //so user can see the hook being reeled up
-                                reloadScreen(hook, cup1, boat, points, background, cup2, currentTime);
-                            }
-                            moveToTrash(cup2[j]);   //moves the garbage collected to inventory once it is collected
-                            cup2[j].print = 0;      //stop printing the cup
-                        }
-                    }
-                    //reloadScreen(hook, cup1, boat, points);
                 }
-
             }
 
-
-            //redraw all the images
-            reloadScreen(hook, cup1, boat, points, background, cup2, currentTime);
         }
+        //redraw all the images
+        reloadScreen(hook, cup1, boat, points, background, cup2, currentTime);
+    }
 
 
 }
 
 void moveCharacter(ALLEGRO_EVENT event, Character &hook, int &mode)
 {
+    ///This function moves the hook downwards
     calcBoundsCharacter(hook);
-    //int mode = 1 ;// mode 0 means I throw to catch, mode 1 means i caught TODO: Figue out how to pass the Mode!
 
     if (event.type == ALLEGRO_EVENT_KEY_DOWN)
     {
         if (event.keyboard.keycode == ALLEGRO_KEY_DOWN && mode == 1)
         {
             hook.moveD = 3;
-            printf ("Key down\n");
         }
     }
     else if (event.type == ALLEGRO_EVENT_KEY_UP)
@@ -156,7 +152,6 @@ void moveCharacter(ALLEGRO_EVENT event, Character &hook, int &mode)
             {
                     hook.moveD = -4;
                     mode = 0;
-                    printf ("Key UP, Mode 0\n");
             }
     }
     if (event.type == ALLEGRO_EVENT_TIMER)
@@ -165,92 +160,41 @@ void moveCharacter(ALLEGRO_EVENT event, Character &hook, int &mode)
         if (hook.y >= 200)
         {
             hook.y += hook.moveD;
-            //printf("Hook is moving by ... >>> %d\n", hook.moveD);
         }
-
-        else //if(hook.y < 200)
+        else
         {
-            //this fixes my out of bounds problem... but how do i make it look smoother
             hook.y = 200;
             mode = 1;
-            //printf("Hook reached the top\n");
         }
-
-        //printf("%d\n",hook.moveD);
-    }
-
-}
-
-void moveCharacter(ALLEGRO_EVENT event, Character &hook)
-{
-    calcBoundsCharacter(hook);
-    int mode = 1 ;// mode 0 means I throw to catch, mode 1 means i caught TODO: Figue out how to pass the Mode!
-
-    if (event.type == ALLEGRO_EVENT_KEY_DOWN)
-    {
-        if (event.keyboard.keycode == ALLEGRO_KEY_DOWN && mode == 1)
-        {
-            hook.moveD = 3;
-            printf ("Key down\n");
-        }
-    }
-    else if (event.type == ALLEGRO_EVENT_KEY_UP)
-    {
-            if (event.keyboard.keycode == ALLEGRO_KEY_DOWN)
-            {
-                    hook.moveD = -4;
-                    mode = 0;
-                    printf ("Key UP, Mode 0\n");
-            }
-    }
-    if (event.type == ALLEGRO_EVENT_TIMER)
-    {
-        // applying movement to hook
-        if (hook.y > 200)
-        {
-            hook.y += hook.moveD;
-        }
-
-        else if (hook.y <= 200)
-        {
-            //this fixes my out of bounds problem... but how do i make it look smoother
-            hook.y = 201;
-            mode = 1;
-            printf("Hook reached the top\n");
-        }
-
-        //printf("%d\n",hook.moveD);
     }
 }
 
 void printTime(double time)
 {
-    //if (event.type == ALLEGRO_EVENT_TIMER)
-
-        al_draw_textf(font, STEELBLUE, 0, 60, ALLEGRO_ALIGN_LEFT, "%0.2f", time);
-        al_flip_display();
+    ///This function prints the time on the screen when called
+    al_draw_textf(font, STEELBLUE, 0, 60, ALLEGRO_ALIGN_LEFT, "%0.2f", time);
+    al_flip_display();
 
 }
 
 void checkTime(ALLEGRO_EVENT event, double time, int &stage)
 {
-        printTime(time);
+    ///This function checks the time and prints the time to screen when called
+    printTime(time);
 
-        if (time > 30) //breaks out of loop when 30s has been reached
-        {
-            gameOver();
-            displayBackButton(stage);
-            stage = 0;
-            //break;
-        }
-
+    if (time < 0) //breaks out of loop when 0s has been reached
+    {
+        gameOver();
+        displayBackButton(stage);
+        stage = 0;
+    }
 }
 
 void gameOver()
 {
+    ///This function prints game over to the screen when the timer runs out (or when called)
     struct Image imgOver;
-    printSprite(imgOver, "gameOver.png", 200, 500, 200, 200);
+    printSprite(imgOver, "gameOver.png", 150, 500, 300, 300);
 }
-
 
 

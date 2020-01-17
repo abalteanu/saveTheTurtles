@@ -10,6 +10,7 @@ extern ALLEGRO_BITMAP* menuBackground;
 
 int loadRules(char text[][200])
 {
+    ///This function reads the rules text file and loads them to the screen when called
     FILE * filePointer = fopen("rules.txt", "r");
 
     if (!filePointer)
@@ -20,14 +21,12 @@ int loadRules(char text[][200])
     }
 
 
-    for (int i = 0; i < 10; i++)// or while file not end of file
+    for (int i = 0; i < 12; i++)
     {
         fgets(text[i], 100, filePointer);
         text[i][strlen(text[i])-1]= ' ';    //replace null char with a space
-        printf("\nTEXT LOADED\n");
     }
 
-       // while (filePointer!=EOF)
 
     fclose(filePointer);
     return 0;
@@ -36,6 +35,7 @@ int loadRules(char text[][200])
 
 void displayHighScores(int highscores[], int &stage)
 {
+    ///This function prints the highscores from the highscore[] array to the screen
     makeBackgrounds(background, backgroundFile);
 
     for (int k = 0; k <= sizeof(highscores); ++k)
@@ -44,12 +44,12 @@ void displayHighScores(int highscores[], int &stage)
     }
     al_flip_display();
 
-    printf("displayHighScores");
     displayBackButton(stage);
 }
 
 int loadHighScore(int highScores[])
 {
+    ///This function reads the highscores from the textfile (checking for updates to highscore since last played)
     FILE * filePointer = fopen("highScores.txt", "r");
 
     if (!filePointer)
@@ -63,7 +63,6 @@ int loadHighScore(int highScores[])
     for (int i = 0; i < sizeof(highScores); i++)// or while file not end of file
     {
         fscanf(filePointer, "%d", &highScores[i]);
-        printf("\nHIGH SCORE LOADED\n");
     }
 
        // while (filePointer!=EOF)
@@ -74,8 +73,8 @@ int loadHighScore(int highScores[])
 
 int updateHighScores(int points, int highScores[])
 {
-
-    for (int i = 0; i < sizeof(highScores); i++)// or while file not end of file
+    ///This function updates the order of the highscore (when a new one is added)
+    for (int i = 0; i < sizeof(highScores); i++)
     {
 
         if(points > highScores[i])
@@ -91,9 +90,7 @@ int updateHighScores(int points, int highScores[])
             highScores[i] = points;
             break;
         }
-        printf("\nHIGH SCORE LOADED\n");
     }
-
 
     FILE * filePointer = fopen("highScores.txt", "w");
 
@@ -105,13 +102,12 @@ int updateHighScores(int points, int highScores[])
     }
 
     //print score into text file for loop
-    for (int i = 0; i < 5; i++)// or while file not end of file
+    for (int i = 0; i < 5; i++)
     {
         fprintf(filePointer, "%d\n", highScores[i]);
     }
 
-
-
     fclose(filePointer);
     return 0;
 }
+

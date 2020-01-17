@@ -9,12 +9,14 @@ extern ALLEGRO_BITMAP* menuBackground;
 
 void mainMenu(int &points, int &stage)
 {
-
-    printf("loadmainMenu\n");
+    ///This function loads the main menu and its buttons and paths
     makeBackgrounds(menuBackground, menuBackgroundFile);
 
     Image turtle;
     printSprite(turtle, "turtle.png", 450, 400, 175, 175);
+
+    Image titleImg;
+    printSprite(titleImg, "title.png", 0, 0, 320, 220);
 
     Button play;
     makeButton(play, "button1.png", 100, 300, "play");
@@ -33,7 +35,6 @@ void mainMenu(int &points, int &stage)
     calcBoundsButton(exit);
 
     ///Button play points highscore rules exit
-    //pressButton
 
     while (stage == 0)
     {
@@ -41,18 +42,12 @@ void mainMenu(int &points, int &stage)
 
         al_wait_for_event(event_queue, &ev);    //waiting for event in the queue
 
-        //printf("Event type: %d\n", ev.type);
-
         if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE )
         {
-            printf("EXIT!!!!!!!!!!!!!! pressed\n");
             stage = -1;
         }
         else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
         {
-            printf("mouse x = %d\n",ev.mouse.x);
-            printf("mouse y = %d\n",ev.mouse.y);
-
             //Determine which of the button was pressed:
 
             int pressedButton = -1;
@@ -78,9 +73,7 @@ void mainMenu(int &points, int &stage)
             {
             case 1:
                 //play button
-                //if (pressButton(play, ev.mouse.x, ev.mouse.y))
-                    printf("Button pressed\n");
-                    stage = 1;
+                stage = 1;
                 break;
             case 2:
                 // highscore button
@@ -98,53 +91,45 @@ void mainMenu(int &points, int &stage)
                 //none of the buttons
                 break;
             }
-
-
-           // stage = 1;
         }
     }
-
-
-    printf("loadmainMenu end\n");
-    //stage = 1;
 }
 
 
 void displayRules(int &points, int &stage)
 {
-    printf("displayRules");
-
+    ///This function displays the rules from the text file when called
     makeBackgrounds(background, backgroundFile);
 
     Button backButton;
     makeButton(backButton, "button1.png", 500, 800, "back");
     calcBoundsButton(backButton);
 
-    char rules[8][200];
+    char rules[12][200];
     loadRules(rules);
-    for (int k = 0; k < 8; ++k)
+    for (int k = 0; k < 12; ++k)
     {
         al_draw_textf (font, BLACK, 0, (k+1)*30, ALLEGRO_ALIGN_LEFT, rules[k]);//Print each row of text from the text file
     }
     al_flip_display();
 
     while (stage == 3)
-        { // Keep going until we hit escape.
+    { // Keep going until we hit escape.
 
-            ALLEGRO_EVENT ev;
+        ALLEGRO_EVENT ev;
 
-            al_wait_for_event(event_queue, &ev);    //waiting for event in the queue
-            if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
-            {   //closes the rules page
+        al_wait_for_event(event_queue, &ev);    //waiting for event in the queue
+        if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+        {   //closes the rules page
+            stage = 0;
+        }
+        else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+        {
+            if (pressButton(backButton, ev.mouse.x, ev.mouse.y))
+            {   //if back button is pressed
                 stage = 0;
             }
-            else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
-            {
-                if (pressButton(backButton, ev.mouse.x, ev.mouse.y))
-                {   //if back button is pressed
-                    stage = 0;
-                }
-            }
         }
+    }
 }
 
